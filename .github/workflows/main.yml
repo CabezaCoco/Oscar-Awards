@@ -1,0 +1,36 @@
+SELECT * FROM dbo.the_oscar_award;
+
+-- Individuals with the most wins
+SELECT TOP 10 name, COUNT(*) AS total_wins
+FROM dbo.the_oscar_award
+WHERE winner = 'True' AND name IS NOT NULL
+GROUP BY name
+ORDER BY total_wins DESC;
+
+-- Films with the Most Wins
+SELECT TOP 10 film, COUNT(*) AS total_wins
+FROM dbo.the_oscar_award
+WHERE winner = 'True' AND film IS NOT NULL
+GROUP BY film
+ORDER BY total_wins DESC;
+
+-- Most Nominated Films by Year
+SELECT year_ceremony, film, COUNT(*) AS nominations
+FROM dbo.the_oscar_award
+WHERE film IS NOT NULL
+GROUP BY year_ceremony, film
+ORDER BY year_ceremony DESC, nominations DESC;
+
+-- Relationship Between Nominations and Wins
+SELECT film, COUNT(*) AS nominations, SUM(CASE WHEN winner = 'True' THEN 1 ELSE 0 END) AS wins 
+FROM dbo.the_oscar_award 
+WHERE film IS NOT NULL
+GROUP BY film 
+ORDER BY nominations DESC, wins DESC;
+
+-- Directors with the Most Wins
+SELECT name, COUNT(*) AS wins
+FROM dbo.the_oscar_award
+WHERE winner = 'True' AND (category LIKE '%Director%' OR category LIKE '%Directing%')
+GROUP BY name
+ORDER BY wins DESC;
